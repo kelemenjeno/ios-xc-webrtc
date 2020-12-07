@@ -11,6 +11,9 @@
 ## Release
 
 ### 1.0.0
+Build date: 2020-12-07 18:54
+
+### 1.0.0
 Build date: 2020-11-30 16:48<br/>
 Commit: '0d863f72a8c747c1b41f2798e5201e1abcdaec2b'
 

@@ -17,9 +17,6 @@ function setup {
     export PATH=$PATH:$workPath/depot_tools
 }
 
-Showing All Messages
-There is no XCFramework found at '/Users/kelemenjeno/Library/Developer/Xcode/DerivedData/XCWebRTC-cylextcczjimdxcsocuqafwshbcp/SourcePackages/artifacts/XCWebRTC/WebRTC.xcframework'.
-
 
 #---- Clean -----
 function clean {
@@ -58,9 +55,11 @@ function generateTargets {
     
     gn gen ../out/ios_simulator_arm64 --args='target_os="ios" target_cpu="arm64" target_environment="simulator" is_component_build=false use_xcode_clang=true is_debug=true ios_deployment_target="10.0" rtc_libvpx_build_vp9=false use_goma=false ios_enable_code_signing=false enable_stripping=true rtc_enable_protobuf=false enable_ios_bitcode=true treat_warnings_as_errors=false'
     
-    gn gen ../out/catalyst_x64 --args='target_os="mac" target_cpu="x64" target_environment="catalyst" is_component_build=false is_debug=false  rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
+    gn gen ../out/macos_x64 --args='target_os="mac" target_cpu="x64" target_environment="catalyst" is_component_build=false is_debug=false  rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
     
-    gn gen ../out/catalyst_arm64 --args='target_os="mac" target_cpu="arm64" target_environment="catalyst" is_component_build=false is_debug=false  rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
+    gn gen ../out/macos_arm64 --args='target_os="mac" target_cpu="arm64" target_environment="catalyst" is_component_build=false is_debug=false  rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
+    
+    #gn gen ../out/Xcode --args='target_os="ios"' --ide=xcode
 }
 #616,4MB
 #---- Build the targets -----
@@ -69,8 +68,8 @@ function buildTargets {
     ninja -C out/ios_arm64 sdk:framework_objc
     ninja -C out/ios_simulator_x64 sdk:framework_objc
     ninja -C out/ios_simulator_arm64 sdk:framework_objc
-    ninja -C out/catalyst_x64 sdk:mac_framework_objc
-    ninja -C out/catalyst_arm64 sdk:mac_framework_objc
+    ninja -C out/macos_x64 sdk:mac_framework_objc
+    ninja -C out/macos_arm64 sdk:mac_framework_objc
 }
 
 #---- Merge simulator builds -----
@@ -92,23 +91,23 @@ function mergeSimulatorBuilds {
     cp -r "${DEVICE_LIBRARY_PATH}/Modules" "${UNIVERSAL_LIBRARY_DIR}"
 }
 
-#---- Merge catalyst builds -----
-function mergeCatalystBuilds {
-    CATALYST_UNIVERSAL_LIBRARY_DIR="$workPath/depot_tools/out/ios-arm64_x86_64-maccatalyst/WebRTC.framework"
-    rm -rf "$workPath/depot_tools/out/ios-arm64_x86_64-maccatalyst"
-    mkdir "$workPath/depot_tools/out/ios-arm64_x86_64-maccatalyst"
+#---- Merge mac builds -----
+function mergeMacOSBuilds {
+    MACOS_UNIVERSAL_LIBRARY_DIR="$workPath/depot_tools/out/macOS-arm64_x86_64/WebRTC.framework"
+    rm -rf "$workPath/depot_tools/out/macos-arm64_x86_64"
+    mkdir "$workPath/depot_tools/out/macos-arm64_x86_64"
     mkdir "${UNIVERSAL_LIBRARY_DIR}"
 
     FRAMEWORK_NAME="WebRTC"
-    CATALYST_X64_LIBRARY_PATH="$workPath/depot_tools/out/catalyst_x64/WebRTC.framework"
-    CATALYST_ARM64_LIBRARY_PATH="$workPath/depot_tools/out/catalyst_arm64/WebRTC.framework"
+    MACOS_X64_LIBRARY_PATH="$workPath/depot_tools/out/macos_x64/WebRTC.framework"
+    MACOS_ARM64_LIBRARY_PATH="$workPath/depot_tools/out/macos_arm64/WebRTC.framework"
 
-    cp -R "${CATALYST_ARM64_LIBRARY_PATH}" "${CATALYST_UNIVERSAL_LIBRARY_DIR}"
+    cp -R "${MACOS_ARM64_LIBRARY_PATH}" "${MACOS_UNIVERSAL_LIBRARY_DIR}"
 
-    rm "${CATALYST_UNIVERSAL_LIBRARY_DIR}/Versions/A/WebRTC"
+    rm "${MACOS_UNIVERSAL_LIBRARY_DIR}/Versions/A/WebRTC"
     
     echo "Make an universal binary"
-    lipo "${CATALYST_X64_LIBRARY_PATH}/Versions/A/${FRAMEWORK_NAME}"  "${CATALYST_ARM64_LIBRARY_PATH}/Versions/A//${FRAMEWORK_NAME}" -create -output "${CATALYST_UNIVERSAL_LIBRARY_DIR}/Versions/A/${FRAMEWORK_NAME}" | echo
+    lipo "${MACOS_X64_LIBRARY_PATH}/Versions/A/${FRAMEWORK_NAME}"  "${MACOS_ARM64_LIBRARY_PATH}/Versions/A//${FRAMEWORK_NAME}" -create -output "${MACOS_UNIVERSAL_LIBRARY_DIR}/Versions/A/${FRAMEWORK_NAME}" | echo
 }
 
 #---- Generate XCFramework -----
@@ -118,7 +117,7 @@ function makeXCFramework {
     xcodebuild -create-xcframework \
     -framework out/ios_arm64/WebRTC.framework \
     -framework out/ios-arm64_x86_64/WebRTC.framework \
-    -framework out/ios-arm64_x86_64-maccatalyst/WebRTC.framework \
+    -framework out/macos-arm64_x86_64/WebRTC.framework \
     -output out/WebRTC.xcframework
 }
 
@@ -126,21 +125,21 @@ function makeXCFramework {
 function exportFramework {
     rm -rf $workPath/WebRTC.xcframework
     mv "$workPath/depot_tools/out/WebRTC.xcframework" "$workPath"
-    \cp "${scriptPath}/templates/Info.plist" "${workPath}/WebRTC.xcframework"
+    #\cp "${scriptPath}/templates/Info.plist" "${workPath}/WebRTC.xcframework"
 }
 
 
 function run {
     setup
-    clean
-    clone
+    #clean
+    #clone
     generateTargets
     buildTargets
-    mergeCatalystBuilds
+    mergeMacOSBuilds
     mergeSimulatorBuilds
     makeXCFramework
     exportFramework
-    clean
+    #clean
 }
 
 if [[ $# -eq 0 ]] ; then
