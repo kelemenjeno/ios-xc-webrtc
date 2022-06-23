@@ -10,6 +10,10 @@
 
 ## Release
 
+### 1.0.1
+Build date: 2022-06-23 13:49
+Chrome version: M103
+
 ### 1.0.0
 Build date: 2020-12-07 18:54<br/>
 Commit: '0d863f72a8c747c1b41f2798e5201e1abcdaec2b'
