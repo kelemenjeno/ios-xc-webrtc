@@ -11,7 +11,7 @@
 ## Release
 
 ### 1.0.1
-Build date: 2022-06-23 13:49
+Build date: 2022-06-23 13:49<br/>
 Chrome version: M103
 
 ### 1.0.0
