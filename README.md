@@ -10,7 +10,7 @@
 ## Release
 
 ### 1.0.2
-Build date: 2022-11-09 17:13
+Build date: 2022-11-09 17:13br/>
 Chrome version: M103(Bitcode disabled)
 
 ### 1.0.1
