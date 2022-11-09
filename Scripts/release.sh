@@ -32,7 +32,7 @@ function copyFiles {
     
     releaseDate=$(date '+%Y-%m-%d %H:%M')
     #releaseDescription="### $version\nBuild date: $releaseDate"
-    releaseDescription="### $version\nBuild date: $releaseDate\nChrome version: M103"
+    releaseDescription="### $version\nBuild date: $releaseDate\nChrome version: M103(Bitcode disabled)"
     sed -i "" "s/## Release/## Release\n\n$releaseDescription/" $rootPath/README.md
     
     rm -rf $rootPath/XCWebRTC.podspec
@@ -56,8 +56,11 @@ function clean {
 #---- Push the changes into the repository -----
 function push {
     cd $rootPath
-    git lfs track "*.zip"
-    git lfs track "WebRTC.xcframework/ios-arm64/WebRTC.framework/WebRTC"
+    git lfs untrack "*.zip"
+    git lfs untrack "WebRTC.xcframework/ios-arm64/WebRTC.framework/WebRTC"
+    rm -rf .gitattributes
+    rm -rf "XCWebRTC/1.0.0"
+    rm -rf "XCWebRTC/1.0.1"
     
     #remove the last tag if exists
     tags="$(git tag --list)"
@@ -92,7 +95,7 @@ function push {
 
 function run {
     setup
-    pull
+    #pull
     #build
     copyFiles
     clean
