@@ -56,11 +56,11 @@ function clean {
 #---- Push the changes into the repository -----
 function push {
     cd $rootPath
-    git lfs untrack "*.zip"
-    git lfs untrack "WebRTC.xcframework/ios-arm64/WebRTC.framework/WebRTC"
-    rm -rf .gitattributes
-    rm -rf "XCWebRTC/1.0.0"
-    rm -rf "XCWebRTC/1.0.1"
+    #git lfs untrack "*.zip"
+    #git lfs untrack "WebRTC.xcframework/ios-arm64/WebRTC.framework/WebRTC"
+    #rm -rf .gitattributes
+    #rm -rf "XCWebRTC/1.0.0"
+    #rm -rf "XCWebRTC/1.0.1"
     
     #remove the last tag if exists
     tags="$(git tag --list)"
