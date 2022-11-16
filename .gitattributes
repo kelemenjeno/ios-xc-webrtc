@@ -1,2 +1,1 @@
-XCWebRTC/1.0.0/WebRTC.xcframework.zip filter=lfs diff=lfs merge=lfs -text
-XCWebRTC/1.0.1/WebRTC.xcframework.zip filter=lfs diff=lfs merge=lfs -text
+XCWebRTC/WebRTC.xcframework.zip filter=lfs diff=lfs merge=lfs -text

@@ -31,13 +31,12 @@ function copyFiles {
     mv WebRTC.xcframework.zip ${releasePath}
     
     releaseDate=$(date '+%Y-%m-%d %H:%M')
-    #releaseDescription="### $version\nBuild date: $releaseDate"
-    releaseDescription="### $version\nBuild date: $releaseDate\nChrome version: M103(Bitcode disabled)"
+    releaseDescription="### $version\nBuild date: $releaseDate"
     sed -i "" "s/## Release/## Release\n\n$releaseDescription/" $rootPath/README.md
     
     rm -rf $rootPath/XCWebRTC.podspec
     
-    sourceURL="https://github.com/TechTeamer/ios-xc-webrtc/raw/master/XCWebRTC/${version}/WebRTC.xcframework.zip"
+    sourceURL="https://github.com/TechTeamer/ios-xc-webrtc/raw/${version}/XCWebRTC/WebRTC.xcframework.zip"
     sourceChecksum=$(swift package compute-checksum "${releasePath}/WebRTC.xcframework.zip")
     sed "s|X.Y.Z|${version}|g; s|SOURCE_URL|${sourceURL}|g" <$scriptPath/templates/XCWebRTC.zip.podspec >$releasePath/XCWebRTC.podspec
     sed "s|SOURCE_CHECKSUM|${sourceChecksum}|g; s|SOURCE_URL|${sourceURL}|g" <$scriptPath/templates/Package.zip.swift >$rootPath/Package.swift
@@ -56,40 +55,12 @@ function clean {
 #---- Push the changes into the repository -----
 function push {
     cd $rootPath
-    #git lfs untrack "*.zip"
-    #git lfs untrack "WebRTC.xcframework/ios-arm64/WebRTC.framework/WebRTC"
-    #rm -rf .gitattributes
-    #rm -rf "XCWebRTC/1.0.0"
-    #rm -rf "XCWebRTC/1.0.1"
-    
-    #remove the last tag if exists
-    tags="$(git tag --list)"
-
-    if [ $(git tag -l "${version}") ]; then
-        git tag -d ${version}
-        git push --delete origin ${version}
-    fi
-    
-    #add
+    git lfs track "*.zip"
+    git lfs track "WebRTC.xcframework/ios-arm64/WebRTC.framework/WebRTC"
     git add .
-    
-    #commit & push
-    commitMSG="New release: v.${version}"
-    commits="$(git reflog)"
-
-    if [[ $commits == *"${commitMSG}"* ]]; then
-        git tag ${version}
-        git push --force origin master
-    else
-        if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "${commitMSG}"
-        fi
-    
-        git tag ${version}
-        git push origin master
-    fi
-    
-    #push tags
+    git commit -m "New release: v.$version"
+    git tag $version
+    git push origin master
     git push --tags origin
 }
 
