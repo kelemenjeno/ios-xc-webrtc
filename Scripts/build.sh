@@ -44,21 +44,20 @@ function generateTargets {
     cd "$workPath/depot_tools/src"
     
     #Find the commits here: https://webrtc.googlesource.com/src
-    #git checkout '0d863f72a8c747c1b41f2798e5201e1abcdaec2b'
+    git checkout '0d863f72a8c747c1b41f2798e5201e1abcdaec2b'
     #'1620db743e12241e5989f6ca69fde622e67b0d18'
-    git checkout origin/master
     gclient sync
-    rm -rf ../out/ios_arm64
+    #rm -rf ../out/ios_arm64
     
-    gn gen ../out/ios_arm64 --args='target_os="ios" target_cpu="arm64" is_component_build=false is_debug=false ios_deployment_target="10.0" rtc_libvpx_build_vp9=false use_goma=false ios_enable_code_signing=false enable_stripping=true rtc_enable_protobuf=false enable_ios_bitcode=true treat_warnings_as_errors=false rtc_include_tests=false'
+    gn gen ../out/ios_arm64 --args='target_os="ios" target_cpu="arm64" is_component_build=false use_xcode_clang=true is_debug=false  ios_deployment_target="10.0" rtc_libvpx_build_vp9=false use_goma=false ios_enable_code_signing=false enable_stripping=true rtc_enable_protobuf=false enable_ios_bitcode=true treat_warnings_as_errors=false'
 
-    #gn gen ../out/ios_simulator_x64 --args='target_os="ios" target_cpu="x64" target_environment="simulator" is_component_build=false use_xcode_clang=true is_debug=true ios_deployment_target="10.0" rtc_libvpx_build_vp9=true use_goma=false ios_enable_code_signing=false enable_stripping=true rtc_enable_protobuf=false enable_ios_bitcode=true treat_warnings_as_errors=false'
+    gn gen ../out/ios_simulator_x64 --args='target_os="ios" target_cpu="x64" target_environment="simulator" is_component_build=false use_xcode_clang=true is_debug=true ios_deployment_target="10.0" rtc_libvpx_build_vp9=false use_goma=false ios_enable_code_signing=false enable_stripping=true rtc_enable_protobuf=false enable_ios_bitcode=true treat_warnings_as_errors=false'
     
-    #gn gen ../out/ios_simulator_arm64 --args='target_os="ios" target_cpu="arm64" target_environment="simulator" is_component_build=false use_xcode_clang=true is_debug=true ios_deployment_target="10.0" rtc_libvpx_build_vp9=true use_goma=false ios_enable_code_signing=false enable_stripping=true rtc_enable_protobuf=false enable_ios_bitcode=true treat_warnings_as_errors=false'
+    gn gen ../out/ios_simulator_arm64 --args='target_os="ios" target_cpu="arm64" target_environment="simulator" is_component_build=false use_xcode_clang=true is_debug=true ios_deployment_target="10.0" rtc_libvpx_build_vp9=false use_goma=false ios_enable_code_signing=false enable_stripping=true rtc_enable_protobuf=false enable_ios_bitcode=true treat_warnings_as_errors=false'
     
-    #gn gen ../out/macos_x64 --args='target_os="mac" target_cpu="x64" target_environment="catalyst" is_component_build=false is_debug=false  rtc_libvpx_build_vp9=true enable_stripping=true rtc_enable_protobuf=false'
+    gn gen ../out/macos_x64 --args='target_os="mac" target_cpu="x64" target_environment="catalyst" is_component_build=false is_debug=false  rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
     
-    #gn gen ../out/macos_arm64 --args='target_os="mac" target_cpu="arm64" target_environment="catalyst" is_component_build=false is_debug=false  rtc_libvpx_build_vp9=true enable_stripping=true rtc_enable_protobuf=false'
+    gn gen ../out/macos_arm64 --args='target_os="mac" target_cpu="arm64" target_environment="catalyst" is_component_build=false is_debug=false  rtc_libvpx_build_vp9=false enable_stripping=true rtc_enable_protobuf=false'
     
     #gn gen ../out/Xcode --args='target_os="ios"' --ide=xcode
 }

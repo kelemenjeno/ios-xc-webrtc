@@ -31,8 +31,7 @@ function copyFiles {
     mv WebRTC.xcframework.zip ${releasePath}
     
     releaseDate=$(date '+%Y-%m-%d %H:%M')
-    #releaseDescription="### $version\nBuild date: $releaseDate"
-    releaseDescription="### $version\nBuild date: $releaseDate\nChrome version: M103"
+    releaseDescription="### $version\nBuild date: $releaseDate"
     sed -i "" "s/## Release/## Release\n\n$releaseDescription/" $rootPath/README.md
     
     rm -rf $rootPath/XCWebRTC.podspec
@@ -58,41 +57,16 @@ function push {
     cd $rootPath
     git lfs track "*.zip"
     git lfs track "WebRTC.xcframework/ios-arm64/WebRTC.framework/WebRTC"
-    
-    #remove the last tag if exists
-    tags="$(git tag --list)"
-
-    if [ $(git tag -l "${version}") ]; then
-        git tag -d ${version}
-        git push --delete origin ${version}
-    fi
-    
-    #add
     git add .
-    
-    #commit & push
-    commitMSG="New release: v.${version}"
-    commits="$(git reflog)"
-
-    if [[ $commits == *"${commitMSG}"* ]]; then
-        git tag ${version}
-        git push --force origin master
-    else
-        if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "${commitMSG}"
-        fi
-    
-        git tag ${version}
-        git push origin master
-    fi
-    
-    #push tags
+    git commit -m "New release: v.$version"
+    git tag $version
+    git push origin master
     git push --tags origin
 }
 
 function run {
     setup
-    pull
+    #pull
     #build
     copyFiles
     clean
