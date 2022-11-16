@@ -10,7 +10,7 @@ s.license           = { :type => 'MIT', :file => 'LICENSE' }
 s.source            = { :git => 'SOURCE_URL', :tag => s.version.to_s }
 
 s.swift_version = '5.2'
-s.platforms = { :ios => "11.0", :osx => "10.5" }
+s.platforms = { :ios => "12.0", :osx => "10.11" }
 s.pod_target_xcconfig = { "SWIFT_VERSION" => "5.2" }
 
 s.vendored_frameworks = 'WebRTC.xcframework'

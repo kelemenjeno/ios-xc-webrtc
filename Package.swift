@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "XCWebRTC",
-    platforms: [ .macOS(.v10_14), .iOS(.v11) ],
+    platforms: [ .macOS(.v10_14), .iOS(.v12) ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -22,7 +22,7 @@ let package = Package(
         
         .binaryTarget(
             name: "WebRTC",
-            url: "https://github.com/kelemenjeno/ios-xc-webrtc/raw/1.0.1/XCWebRTC/WebRTC.xcframework.zip",
-            checksum: "e747b303e4c3ebf76913b8ad6d316d3f866bd4e5bfcb75920126dc9b5813a488")
+            url: "https://github.com/kelemenjeno/ios-xc-webrtc/raw/1.0.2/XCWebRTC/WebRTC.xcframework.zip",
+            checksum: "47c19b44f38a1aa2b870d7b33b30b684a6aae7f7a9271a0e1f7b52f598105f98")
     ]
 )
